@@ -83,7 +83,7 @@ endif()
 
 
 ament_export_dependencies(rmw)
-ament_export_dependencies(rosidl_cmake)
+ament_export_dependencies(rosidl_pycommon)
 ament_export_dependencies(rosidl_generator_c)
 ament_export_dependencies(rosidl_generator_cpp)
 ament_export_dependencies(rosidl_runtime_c)
@@ -104,15 +104,15 @@ if(WIN32)
     PRIVATE "ROSIDL_TYPESUPPORT_PROTOBUF_C_BUILDING_DLL")
 endif()
 
-# TODO(tfoote) This needs cpp to build due to
-# https://github.com/tfoote/rosidl_typesupport_protobuf/blob/132668ae385163ee8b45ce45a9022654e5c77666/
-# rosidl_typesupport_protobuf_c/resource/msg__rosidl_typesupport_protobuf_c.hpp.em#L30
-# This looks like it might want to be cleaned up.
-ament_target_dependencies(${PROJECT_NAME} "rosidl_typesupport_protobuf" rosidl_runtime_c rosidl_runtime_cpp)
-
 target_include_directories(${PROJECT_NAME} PUBLIC
   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-  "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>")
+  "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>"
+  ${rosidl_typesupport_protobuf_INCLUDE_DIRS}
+)
+target_link_libraries(${PROJECT_NAME} PUBLIC
+  rosidl_runtime_c::rosidl_runtime_c
+  rosidl_runtime_cpp::rosidl_runtime_cpp
+)
 
 # Export old-style CMake variables
 ament_export_include_directories("include/${PROJECT_NAME}")
@@ -120,8 +120,6 @@ ament_export_libraries(${PROJECT_NAME})
 
 # Export modern CMake targets
 ament_export_targets(${PROJECT_NAME})
-
-ament_target_dependencies(${PROJECT_NAME} rosidl_typesupport_protobuf)
 
 ament_index_register_resource("rosidl_typesupport_c")
 

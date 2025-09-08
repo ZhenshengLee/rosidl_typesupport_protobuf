@@ -167,14 +167,14 @@ set_target_properties(${rosidl_generate_interfaces_TARGET}${_target_suffix}
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/rosidl_generator_c>"
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/rosidl_typesupport_protobuf_cpp>"
     "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>"
+    "${rosidl_typesupport_interface_INCLUDE_DIRS}"
   )
 
 
-ament_target_dependencies(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-  rmw
-  rosidl_typesupport_protobuf
-  rosidl_typesupport_protobuf_cpp
-  rosidl_typesupport_interface
+target_link_libraries(${rosidl_generate_interfaces_TARGET}${_target_suffix} PUBLIC
+  rmw::rmw
+  rosidl_typesupport_interface::rosidl_typesupport_interface
+  rosidl_typesupport_protobuf_cpp::rosidl_typesupport_protobuf_cpp
 )
 
 # Depend on dependencies

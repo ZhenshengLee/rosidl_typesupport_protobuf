@@ -142,16 +142,13 @@ PUBLIC
 "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/rosidl_generator_c>"
 "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/rosidl_typesupport_protobuf_c>"
 "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>"
+"${rosidl_typesupport_interface_INCLUDE_DIRS}"
 )
-
-
-ament_target_dependencies(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-  rmw
-  rosidl_typesupport_protobuf
-  rosidl_typesupport_protobuf_c
-  rosidl_typesupport_interface
+target_link_libraries(${rosidl_generate_interfaces_TARGET}${_target_suffix} PUBLIC
+  rmw::rmw
+  rosidl_typesupport_interface::rosidl_typesupport_interface
+  rosidl_typesupport_protobuf_c::rosidl_typesupport_protobuf_c
 )
-
 
 # generate header to switch between export and import for a specific package
 set(_visibility_control_file
