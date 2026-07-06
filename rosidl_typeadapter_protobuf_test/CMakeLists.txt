@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.10)
 
 project(rosidl_typeadapter_protobuf_test)
 
@@ -109,7 +109,7 @@ if(BUILD_TESTING)
 
   function(custom_executable  target)
     add_executable(${target} ${ARGN})
-    ament_target_dependencies(${target}
+    target_link_libraries(${target}
       "rclcpp"
       "rclcpp_action"
       "test_msgs"
@@ -120,7 +120,7 @@ if(BUILD_TESTING)
     "test/subscribe_array_types.cpp"
     "test/subscribe_basic_types.cpp"
     "test/subscribe_string_types.cpp")
-  ament_target_dependencies(subscribe_types
+  target_link_libraries(subscribe_types
     "rclcpp"
     "test_msgs")
 
