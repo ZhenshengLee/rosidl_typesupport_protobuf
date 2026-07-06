@@ -83,7 +83,7 @@ endif()
 
 
 ament_export_dependencies(rmw)
-ament_export_dependencies(rosidl_pycommon)
+# ament_export_dependencies(rosidl_pycommon)
 ament_export_dependencies(rosidl_generator_c)
 ament_export_dependencies(rosidl_generator_cpp)
 ament_export_dependencies(rosidl_runtime_c)

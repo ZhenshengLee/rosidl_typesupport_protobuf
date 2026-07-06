@@ -51,8 +51,9 @@ foreach(_abs_idl_file ${rosidl_generate_interfaces_ABS_IDL_FILES})
   # Turn idl name into file names
   string_camel_case_to_lower_case_underscore("${_idl_name}" _header_name)
   list(APPEND _generated_files
-    "${_output_path}/${_parent_folder}/detail/${_header_name}__type_support.cpp"
+    "${_output_path}/${_parent_folder}/detail/${_header_name}__rosidl_typesupport_protobuf_cpp.cpp"
     "${_output_path}/${_parent_folder}/${_header_name}__rosidl_typesupport_protobuf_cpp.hpp"
+    "${_output_path}/${_parent_folder}/${_header_name}__typeadapter_protobuf_cpp.hpp"
   )
 endforeach()
 
@@ -187,19 +188,19 @@ foreach(_pkg_name ${rosidl_generate_interfaces_DEPENDENCY_PACKAGE_NAMES})
     )
   endif()
   # Link against protobuf C++ typesupport libraries (backend isolation)
-  target_link_libraries(${rosidl_generate_interfaces_TARGET}${_target_suffix}
+  target_link_libraries(${rosidl_generate_interfaces_TARGET}${_target_suffix} PUBLIC
     ${${_pkg_name}_LIBRARIES${_target_suffix}})
   # Also link against generator_cpp libraries for required symbols
-  target_link_libraries(${rosidl_generate_interfaces_TARGET}${_target_suffix}
+  target_link_libraries(${rosidl_generate_interfaces_TARGET}${_target_suffix} PUBLIC
     ${${_pkg_name}_LIBRARIES__rosidl_generator_cpp})
 endforeach()
 
 # Link against current package's generator_cpp for required symbols
-target_link_libraries(${rosidl_generate_interfaces_TARGET}${_target_suffix}
+target_link_libraries(${rosidl_generate_interfaces_TARGET}${_target_suffix} PUBLIC
   ${rosidl_generate_interfaces_TARGET}__rosidl_generator_cpp
 )
 
-target_link_libraries(${rosidl_generate_interfaces_TARGET}${_target_suffix} ${Protobuf_LIBRARY})
+target_link_libraries(${rosidl_generate_interfaces_TARGET}${_target_suffix} PUBLIC ${Protobuf_LIBRARY})
 
 # Make top level generation target depend on this library
 add_dependencies(

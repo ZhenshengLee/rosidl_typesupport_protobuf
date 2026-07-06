@@ -67,6 +67,19 @@ foreach(_abs_idl_file ${rosidl_generate_interfaces_ABS_IDL_FILES})
   list(APPEND rosidl_adapter_proto_GENERATED_PROTO "${rosidl_adapter_proto_OUTPUT_DIR}/${_parent_folder}/${_idl_name}.proto")
 endforeach()
 
+if(NOT Protobuf_PROTOC_EXECUTABLE AND NOT PROTOBUF_PROTOC_EXECUTABLE)
+  find_program(Protobuf_PROTOC_EXECUTABLE NAMES protoc)
+endif()
+if(NOT Protobuf_PROTOC_EXECUTABLE)
+  if(PROTOBUF_PROTOC_EXECUTABLE)
+    set(Protobuf_PROTOC_EXECUTABLE "${PROTOBUF_PROTOC_EXECUTABLE}")
+  elseif(TARGET protobuf::protoc)
+    get_target_property(Protobuf_PROTOC_EXECUTABLE protobuf::protoc IMPORTED_LOCATION)
+  else()
+    set(Protobuf_PROTOC_EXECUTABLE "protoc")
+  endif()
+endif()
+
 add_custom_command(
   OUTPUT ${rosidl_adapter_proto_GENERATED_CPP}
   ${rosidl_adapter_proto_GENERATED_H}
