@@ -34,7 +34,7 @@ foreach(_abs_idl_file ${rosidl_generate_interfaces_ABS_IDL_FILES})
   string_camel_case_to_lower_case_underscore("${_idl_name}" _header_name)
   list(APPEND _generated_files
     "${_output_path}/${_parent_folder}/detail/${_header_name}__rosidl_typesupport_protobuf_cpp.cpp"
-    "${_output_path}/${_parent_folder}/${_header_name}__rosidl_typesupport_protobuf_cpp.hpp"
+    "${_output_path}/${_parent_folder}/detail/${_header_name}__rosidl_typesupport_protobuf_cpp.hpp"
     "${_output_path}/${_parent_folder}/${_header_name}__typeadapter_protobuf_cpp.hpp"
   )
 endforeach()
@@ -98,7 +98,7 @@ add_custom_command(
 
 # generate header to switch between export and import for a specific package
 set(_visibility_control_file
-"${_output_path}/rosidl_typesupport_protobuf_cpp__visibility_control.h")
+"${_output_path}/msg/rosidl_typesupport_protobuf_cpp__visibility_control.h")
 string(TOUPPER "${PROJECT_NAME}" PROJECT_NAME_UPPER)
 configure_file(
   "${rosidl_typesupport_protobuf_cpp_TEMPLATE_DIR}/rosidl_typesupport_protobuf_cpp__visibility_control.h.in"
@@ -150,7 +150,6 @@ set_target_properties(${rosidl_generate_interfaces_TARGET}${_target_suffix}
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/rosidl_generator_c>"
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/rosidl_typesupport_protobuf_cpp>"
     "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>"
-    "${rosidl_typesupport_interface_INCLUDE_DIRS}"
   )
 
 
@@ -162,13 +161,6 @@ target_link_libraries(${rosidl_generate_interfaces_TARGET}${_target_suffix} PUBL
 
 # Depend on dependencies
 foreach(_pkg_name ${rosidl_generate_interfaces_DEPENDENCY_PACKAGE_NAMES})
-  set(_dep_include_var "${_pkg_name}_INCLUDE_DIRS")
-  if(DEFINED ${_dep_include_var})
-    target_include_directories(${rosidl_generate_interfaces_TARGET}${_target_suffix}
-      PUBLIC
-      ${${_dep_include_var}}
-    )
-  endif()
   # Link against protobuf C++ typesupport libraries (backend isolation)
   target_link_libraries(${rosidl_generate_interfaces_TARGET}${_target_suffix} PUBLIC
     ${${_pkg_name}_LIBRARIES${_target_suffix}})

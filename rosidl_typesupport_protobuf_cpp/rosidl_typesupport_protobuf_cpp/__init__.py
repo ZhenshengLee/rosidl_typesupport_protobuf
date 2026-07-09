@@ -21,7 +21,7 @@ from rosidl_pycommon import generate_files
 
 def generate_cpp(generator_arguments_file):
     mapping = {
-        "idl__rosidl_typesupport_protobuf_cpp.hpp.em": "%s__rosidl_typesupport_protobuf_cpp.hpp",
+        "idl__rosidl_typesupport_protobuf_cpp.hpp.em": "detail/%s__rosidl_typesupport_protobuf_cpp.hpp",
         "idl__typeadapter_protobuf_cpp.hpp.em": "%s__typeadapter_protobuf_cpp.hpp",
         "idl__type_support.cpp.em": "detail/%s__rosidl_typesupport_protobuf_cpp.cpp",
     }

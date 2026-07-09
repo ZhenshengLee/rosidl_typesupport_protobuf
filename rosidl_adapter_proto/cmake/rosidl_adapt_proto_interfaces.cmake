@@ -95,7 +95,7 @@ add_custom_command(
 
 # generate header to switch between export and import for a specific package
 set(rosidl_adapter_proto_VISIBILITY_CONTROL_HEADER
-"${rosidl_adapter_proto_OUTPUT_DIR}/rosidl_adapter_proto__visibility_control.h")
+"${rosidl_adapter_proto_OUTPUT_DIR}/msg/rosidl_adapter_proto__visibility_control.h")
 string(TOUPPER "${PROJECT_NAME}" PROJECT_NAME_UPPER)
 configure_file(
   "${rosidl_adapter_proto_TEMPLATE_DIR}/rosidl_adapter_proto__visibility_control.h.in"
