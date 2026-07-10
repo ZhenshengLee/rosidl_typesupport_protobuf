@@ -111,6 +111,6 @@ install(
 
 install(
   DIRECTORY ${rosidl_adapter_proto_OUTPUT_DIR}
-  DESTINATION "share/${PROJECT_NAME}"
+  DESTINATION "share"
   PATTERN "*.proto"
 )
