@@ -51,16 +51,13 @@ TEMPLATE(
     include_directives=include_directives
 )
 }@
-
 @[for message in content.get_elements_of_type(Message)]
-
 @{
 ros_type_ns = ros_type_namespace(package_name, interface_path)
 ros_type_name = ros_type_name(message)
 ros_type = ros_type(package_name, interface_path, message)
 proto_type = protobuf_type(package_name, interface_path, message)
 }@
-
 template<>
 struct rclcpp::TypeAdapter<@(proto_type),  @(ros_type)>
 {
@@ -88,5 +85,4 @@ struct rclcpp::TypeAdapter<@(proto_type),  @(ros_type)>
 };
 
 RCLCPP_USING_CUSTOM_TYPE_AS_ROS_MESSAGE_TYPE(@(proto_type),  @(ros_type));
-
 @[end for]

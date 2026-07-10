@@ -50,7 +50,6 @@ TEMPLATE(
     include_directives=include_directives
 )
 }@
-
 @[for ns in message.structure.namespaced_type.namespaces]
 namespace @(ns)
 {
@@ -70,7 +69,6 @@ convert_to_ros(const @(proto_type) &pb_msg, @(ros_type) &ros_msg);
 @[  for ns in reversed(message.structure.namespaced_type.namespaces)]
 }  // namespace @(ns)
 @[  end for]
-
 #ifdef __cplusplus
 extern "C"
 {

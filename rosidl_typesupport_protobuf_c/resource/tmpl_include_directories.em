@@ -20,28 +20,30 @@
 @{
 def is_protobuf_header(header_file):
   return header_file.endswith(".pb.h")
-}
-@[for header_file in system_header_files]
-@[    if header_file not in include_directives]
-@{include_directives.add(header_file)}@
-#include <@(header_file)>
-@[    end if]
-@[end for]
 
-@[for header_file in header_files]
-@[    if header_file not in include_directives]
-@{include_directives.add(header_file)}@
-@[      if is_protobuf_header(header_file)]
-#ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable : 4127 4146 4800)
-#endif
-#include "@(header_file)"
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif
-@[      else]
-#include "@(header_file)"
-@[      end if]
-@[    end if]
-@[end for]
+include_lines = []
+for header_file in system_header_files:
+  if header_file not in include_directives:
+    include_directives.add(header_file)
+    include_lines.append(f"#include <{header_file}>")
+
+for header_file in header_files:
+  if header_file not in include_directives:
+    include_directives.add(header_file)
+    if is_protobuf_header(header_file):
+      include_lines.append(
+          "#ifdef _MSC_VER\n"
+          "#pragma warning(push)\n"
+          "#pragma warning(disable : 4127 4146 4800)\n"
+          "#endif\n"
+          f'#include "{header_file}"\n'
+          "#ifdef _MSC_VER\n"
+          "#pragma warning(pop)\n"
+          "#endif"
+      )
+    else:
+      include_lines.append(f'#include "{header_file}"')
+
+includes_output = "\n".join(include_lines)
+}@
+@(includes_output)
