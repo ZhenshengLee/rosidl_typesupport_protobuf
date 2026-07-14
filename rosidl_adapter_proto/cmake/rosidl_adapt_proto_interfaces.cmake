@@ -88,6 +88,7 @@ add_custom_command(
   ARGS "${rosidl_adapter_proto_BIN}"
   --generator-arguments-file "${generator_arguments_file}"
   --protoc-path "${Protobuf_PROTOC_EXECUTABLE}"
+  --source-dir "${CMAKE_CURRENT_SOURCE_DIR}"
   DEPENDS ${_target_dependencies} "${PYTHON_EXECUTABLE}"
   COMMENT "Generating type support for Protobuf"
   VERBATIM

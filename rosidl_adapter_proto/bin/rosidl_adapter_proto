@@ -22,6 +22,7 @@ import argparse
 import sys
 import pathlib
 import os
+import shutil
 
 from rosidl_pycommon import read_generator_arguments
 from rosidl_adapter_proto import generate_proto
@@ -39,6 +40,11 @@ def main(argv=sys.argv[1:]):
         '--protoc-path',
         required=True,
         help='Path to the protoc executable')
+    parser.add_argument(
+        '--source-dir',
+        required=False,
+        default=None,
+        help='The source directory of the ROS 2 package')
 
     args = parser.parse_args(argv)
 
@@ -70,6 +76,20 @@ def main(argv=sys.argv[1:]):
                     str(idl_rel_path.parent),
                     idl_stem + ".proto"
         )
+        # Check for Y-Shape architecture SSOT .proto file to override synthetic IDL-generated .proto
+        candidates = []
+        if args.source_dir:
+            source_path = pathlib.Path(args.source_dir)
+            candidates.append(source_path / idl_rel_path.with_suffix('.proto'))
+            candidates.append(source_path / 'proto' / (idl_stem + '.proto'))
+        candidates.append(pathlib.Path(idl_parts[0]) / idl_rel_path.with_suffix('.proto'))
+
+        for candidate in candidates:
+            if candidate.is_file() and candidate.resolve() != pathlib.Path(generated_file).resolve():
+                print(f"Y-Shape Architecture: Using existing SSOT proto definition '{candidate}' for '{generated_file}'")
+                shutil.copy2(candidate, generated_file)
+                break
+
         print(str(pathlib.Path(generated_file).resolve()))
         proto_files.append(str(pathlib.Path(generated_file).resolve()))
 
