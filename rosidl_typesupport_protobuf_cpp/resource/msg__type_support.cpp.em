@@ -72,6 +72,9 @@ ROSIDL_TYPESUPPORT_PROTOBUF_CPP_PUBLIC__@(package_name)
 bool convert_to_proto(const @(ros_type) &ros_msg, @(proto_type) &pb_msg)
 {
 @[for member in message.structure.members]
+@[  if member.name == 'has_field']
+@[    continue]
+@[  end if]
   // Member: @(member.name)
 @[  if isinstance(member.type, AbstractNestedType)]
 @[    if isinstance(member.type.value_type, BasicType) or isinstance(member.type.value_type, AbstractString)]
@@ -110,6 +113,9 @@ ROSIDL_TYPESUPPORT_PROTOBUF_CPP_PUBLIC__@(package_name)
 bool convert_to_ros(const @(proto_type) &pb_msg, @(ros_type) &ros_msg)
 {
 @[for member in message.structure.members]
+@[  if member.name == 'has_field']
+@[    continue]
+@[  end if]
   // Member: @(member.name)
 @[  if isinstance(member.type, AbstractNestedType)]
 @[    if isinstance(member.type.value_type, BasicType) or isinstance(member.type.value_type, AbstractString)]
