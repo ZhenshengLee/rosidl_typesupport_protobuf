@@ -57,7 +57,11 @@ def main(argv=sys.argv[1:]):
 
     # Compile .proto files using protoc
     cpp_out_dir     = str(pathlib.Path(generator_args["output_dir"] + "/..").resolve())
-    proto_path_list = [str(pathlib.Path(generator_args["output_dir"] + "/..").resolve())]
+    proto_path_list = [
+        str(pathlib.Path(generator_args["output_dir"] + "/..").resolve())
+    ]
+    if args.source_dir:
+        proto_path_list.append(str(pathlib.Path(args.source_dir + "/..").resolve()))
     proto_files     = []
     package_name    = generator_args["package_name"]
 

@@ -10,6 +10,7 @@ if(NOT Protobuf_FOUND)
   )
 else()
   find_package(ament_cmake_core QUIET REQUIRED)
+  find_package(rosidl_adapter_proto REQUIRED)
   ament_register_extension(
     "rosidl_generate_idl_interfaces"
     "rosidl_typesupport_protobuf_cpp"

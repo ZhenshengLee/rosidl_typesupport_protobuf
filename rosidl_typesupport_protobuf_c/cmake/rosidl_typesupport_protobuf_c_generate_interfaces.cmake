@@ -81,12 +81,32 @@ add_custom_command(
 
 set(_target_suffix "__rosidl_typesupport_protobuf_c")
 
+set(_rosidl_adapter_proto_cpps "")
+set(_rosidl_adapter_proto_headers "")
+foreach(_abs_idl_file ${rosidl_generate_interfaces_ABS_IDL_FILES})
+  get_filename_component(_parent_folder "${_abs_idl_file}" DIRECTORY)
+  get_filename_component(_parent_folder "${_parent_folder}" NAME)
+  get_filename_component(_idl_name "${_abs_idl_file}" NAME_WE)
+  list(APPEND _rosidl_adapter_proto_cpps "${CMAKE_CURRENT_BINARY_DIR}/rosidl_adapter_proto/${PROJECT_NAME}/${_parent_folder}/${_idl_name}.pb.cc")
+  list(APPEND _rosidl_adapter_proto_headers "${CMAKE_CURRENT_BINARY_DIR}/rosidl_adapter_proto/${PROJECT_NAME}/${_parent_folder}/${_idl_name}.pb.h")
+endforeach()
+
 link_directories(${Protobuf_LIBRARY_DIRS})
+
+set_source_files_properties(
+  ${_rosidl_adapter_proto_cpps}
+  ${_rosidl_adapter_proto_headers}
+  PROPERTIES GENERATED TRUE
+)
 
 add_library(${rosidl_generate_interfaces_TARGET}${_target_suffix} SHARED
   ${_generated_files}
-  ${rosidl_adapter_proto_GENERATED_CPP}
+  ${_rosidl_adapter_proto_cpps}
+  ${_rosidl_adapter_proto_headers}
 )
+if(TARGET ${rosidl_generate_interfaces_TARGET}__rosidl_adapter_proto)
+  add_dependencies(${rosidl_generate_interfaces_TARGET}${_target_suffix} ${rosidl_generate_interfaces_TARGET}__rosidl_adapter_proto)
+endif()
 
 if(rosidl_generate_interfaces_LIBRARY_NAME)
   set_target_properties(${rosidl_generate_interfaces_TARGET}${_target_suffix}
@@ -109,6 +129,26 @@ if(NOT WIN32)
 else()
   set(_target_compile_flags "/W4")
 endif()
+
+set(_rosidl_adapter_proto_vis_header "${CMAKE_CURRENT_BINARY_DIR}/rosidl_adapter_proto/${PROJECT_NAME}/msg/rosidl_adapter_proto__visibility_control.h")
+if(NOT WIN32)
+  set(_target_compile_flags "${_target_compile_flags} -include${_rosidl_adapter_proto_vis_header}")
+else()
+  set(_target_compile_flags "${_target_compile_flags} /FI\"${_rosidl_adapter_proto_vis_header}\"")
+endif()
+target_compile_definitions(${rosidl_generate_interfaces_TARGET}${_target_suffix}
+  PRIVATE "ROSIDL_ADAPTER_PROTO_BUILDING_DLL__${PROJECT_NAME}")
+foreach(_pkg_name ${rosidl_generate_interfaces_DEPENDENCY_PACKAGE_NAMES})
+  set(_dep_vis_header "${${_pkg_name}_DIR}/../../../include/${_pkg_name}/${_pkg_name}/msg/rosidl_adapter_proto__visibility_control.h")
+  normalize_path(_dep_vis_header "${_dep_vis_header}")
+  if(EXISTS "${_dep_vis_header}")
+    if(NOT WIN32)
+      set(_target_compile_flags "${_target_compile_flags} -include${_dep_vis_header}")
+    else()
+      set(_target_compile_flags "${_target_compile_flags} /FI\"${_dep_vis_header}\"")
+    endif()
+  endif()
+endforeach()
 
 string(REPLACE ";" " " _target_compile_flags "${_target_compile_flags}")
 set_target_properties(${rosidl_generate_interfaces_TARGET}${_target_suffix}

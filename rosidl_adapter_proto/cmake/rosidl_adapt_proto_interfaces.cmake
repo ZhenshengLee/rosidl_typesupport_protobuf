@@ -94,6 +94,18 @@ add_custom_command(
   VERBATIM
 )
 
+add_custom_target(${rosidl_generate_interfaces_TARGET}__rosidl_adapter_proto DEPENDS
+  ${rosidl_adapter_proto_GENERATED_CPP}
+  ${rosidl_adapter_proto_GENERATED_H}
+  ${rosidl_adapter_proto_GENERATED_PROTO}
+)
+if(TARGET ${rosidl_generate_interfaces_TARGET}__rosidl_typesupport_protobuf_cpp)
+  add_dependencies(${rosidl_generate_interfaces_TARGET}__rosidl_typesupport_protobuf_cpp ${rosidl_generate_interfaces_TARGET}__rosidl_adapter_proto)
+endif()
+if(TARGET ${rosidl_generate_interfaces_TARGET}__rosidl_typesupport_protobuf_c)
+  add_dependencies(${rosidl_generate_interfaces_TARGET}__rosidl_typesupport_protobuf_c ${rosidl_generate_interfaces_TARGET}__rosidl_adapter_proto)
+endif()
+
 # generate header to switch between export and import for a specific package
 set(rosidl_adapter_proto_VISIBILITY_CONTROL_HEADER
 "${rosidl_adapter_proto_OUTPUT_DIR}/msg/rosidl_adapter_proto__visibility_control.h")
@@ -103,6 +115,24 @@ configure_file(
   "${rosidl_adapter_proto_VISIBILITY_CONTROL_HEADER}"
   @ONLY
 )
+
+add_compile_definitions("ROSIDL_ADAPTER_PROTO_BUILDING_DLL__${PROJECT_NAME}")
+if(NOT WIN32)
+  add_compile_options("-include${rosidl_adapter_proto_VISIBILITY_CONTROL_HEADER}")
+else()
+  add_compile_options("/FI\"${rosidl_adapter_proto_VISIBILITY_CONTROL_HEADER}\"")
+endif()
+foreach(_pkg_name ${rosidl_generate_interfaces_DEPENDENCY_PACKAGE_NAMES})
+  set(_proto_dir "${${_pkg_name}_DIR}/../../../include/${_pkg_name}/${_pkg_name}/msg/rosidl_adapter_proto__visibility_control.h")
+  normalize_path(_proto_dir "${_proto_dir}")
+  if(EXISTS "${_proto_dir}")
+    if(NOT WIN32)
+      add_compile_options("-include${_proto_dir}")
+    else()
+      add_compile_options("/FI\"${_proto_dir}\"")
+    endif()
+  endif()
+endforeach()
 
 install(
   DIRECTORY ${rosidl_adapter_proto_OUTPUT_DIR}
