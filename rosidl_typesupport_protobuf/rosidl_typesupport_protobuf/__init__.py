@@ -212,10 +212,18 @@ def protobuf_type(package_name, interface_path, message):
 
 
 def protobuf_type_from_namespaced_type(namespaced_type):
+    if namespaced_type.namespaces == ['builtin_interfaces', 'msg'] and namespaced_type.name == 'Time':
+        return '::google::protobuf::Timestamp'
+    if namespaced_type.namespaces == ['builtin_interfaces', 'msg'] and namespaced_type.name == 'Duration':
+        return '::google::protobuf::Duration'
     return '::' + '::'.join(namespaced_type.namespaces +
                             [PROTO_PACKAGE_POSTFIX, namespaced_type.name])
 
 
 def protobuf_type_from_namespaced_type_c(namespaced_type):
+    if namespaced_type.namespaces == ['builtin_interfaces', 'msg'] and namespaced_type.name == 'Time':
+        return '::google::protobuf::Timestamp'
+    if namespaced_type.namespaces == ['builtin_interfaces', 'msg'] and namespaced_type.name == 'Duration':
+        return '::google::protobuf::Duration'
     return '::' + '::'.join(namespaced_type.namespaces +
                             [PROTO_PACKAGE_POSTFIX, namespaced_type.name])

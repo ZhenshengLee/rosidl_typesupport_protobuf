@@ -41,6 +41,7 @@ header_files = [
     'rosidl_typesupport_protobuf_c/identifier.hpp',
     'rosidl_typesupport_protobuf_c/to_ros_c_string.hpp',
     'rosidl_typesupport_protobuf_c/wstring_conversion.hpp',
+    'rosidl_typesupport_protobuf/builtin_interfaces_conversions.hpp',
     'rosidl_typesupport_protobuf/rosidl_generator_c_pkg_adapter.hpp',
     'rosidl_typesupport_protobuf/message_type_support.hpp',
     'rosidl_typesupport_protobuf/message_type_support_decl.hpp',

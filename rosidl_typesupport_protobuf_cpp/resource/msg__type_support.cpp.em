@@ -38,6 +38,7 @@ header_files = [
     'rosidl_typesupport_cpp/message_type_support.hpp',
     'rosidl_typesupport_protobuf_cpp/identifier.hpp',
     'rosidl_typesupport_protobuf_cpp/wstring_conversion.hpp',
+    'rosidl_typesupport_protobuf/builtin_interfaces_conversions.hpp',
     'rosidl_typesupport_protobuf/message_type_support.hpp',
     'rosidl_typesupport_protobuf/message_type_support_decl.hpp',
     'rosidl_typesupport_protobuf/proto_descriptor_helper.hpp',
